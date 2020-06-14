@@ -32,7 +32,7 @@
       <div class="left">
         <div class="sec">
           <div class="up">
-            <div class="news">
+            <div class="navs">
               <h2>
                 <i></i>
                 <a>热门推荐</a>
@@ -43,22 +43,28 @@
                 }}</a>
               </nav>
             </div>
-            <a
-              >更多
+            <a>
+              更多
               <i
                 nz-icon
-                type="arrow-right"
+                nzType="arrow-right"
                 theme="outline"
               ></i>
             </a>
           </div>
           <div class="down">
             <div class="down-wrap">
-              <!-- <app-single-sheet></app-single-sheet> -->
+              <app-single-sheet
+                [sheet]="sheet"
+                *ngFor="let sheet of songSheetList"
+                class="sheet-item"
+              ></app-single-sheet>
             </div>
           </div>
         </div>
       </div>
+      <!-- 入住歌手 -->
+      <div class="right"></div>
     </div>
   </div>
 </div>
