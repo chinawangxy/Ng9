@@ -1,0 +1,64 @@
+<div class="home">
+  <app-wyy-carousel
+    #wyyCarousel
+    [activeIndex]="carouselIndex"
+    (changeSlide)="onChangeSlide($event)"
+  >
+    <nz-carousel
+      [nzAutoPlay]="true"
+      nzEffect="fade"
+      [nzDotRender]="wyyCarousel.dotRef"
+      (nzBeforeChange)="onBeforeChange($event)"
+    >
+      <div
+        class="carousel-item"
+        nz-carousel-content
+        *ngFor="let item of banners"
+      >
+        <a
+          [href]="item.url"
+          target="_blank"
+          class="banner-item"
+        >
+          <img [src]="item.imageUrl" alt="轮播图" />
+        </a>
+      </div>
+    </nz-carousel>
+  </app-wyy-carousel>
+
+  <!-- 主体 -->
+  <div class="main">
+    <div class="wrap">
+      <div class="left">
+        <div class="sec">
+          <div class="up">
+            <div class="news">
+              <h2>
+                <i></i>
+                <a>热门推荐</a>
+              </h2>
+              <nav>
+                <a *ngFor="let item of hotTags">{{
+                  item.name
+                }}</a>
+              </nav>
+            </div>
+            <a
+              >更多
+              <i
+                nz-icon
+                type="arrow-right"
+                theme="outline"
+              ></i>
+            </a>
+          </div>
+          <div class="down">
+            <div class="down-wrap">
+              <!-- <app-single-sheet></app-single-sheet> -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

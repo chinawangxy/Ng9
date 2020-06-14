@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { HomeService } from './home/home.service';
 
 @NgModule({
   declarations: [],
-  imports: [CommonModule],
+  exports: [],
 })
 export class ServicesModule {}
