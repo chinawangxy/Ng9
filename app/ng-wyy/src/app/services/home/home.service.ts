@@ -42,7 +42,7 @@ export class HomeService {
   getPersonalSheetList(): Observable<SongSheet[]> {
     return this.http.get(`${this.url}personalized`).pipe(
       map((res: { result: SongSheet[] }) => res.result),
-      map((res) => res.slice(0, 6))
+      map((res) => res.slice(0, 16))
     );
   }
 }

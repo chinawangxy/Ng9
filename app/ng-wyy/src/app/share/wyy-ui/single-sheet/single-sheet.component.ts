@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
+import { SongSheet } from 'src/app/services';
 
 @Component({
   selector: 'app-single-sheet',
@@ -6,6 +7,8 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./single-sheet.component.less'],
 })
 export class SingleSheetComponent implements OnInit {
+  @Input() sheet: SongSheet;
+
   constructor() {}
 
   ngOnInit() {}
