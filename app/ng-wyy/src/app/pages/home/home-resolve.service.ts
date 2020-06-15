@@ -11,7 +11,7 @@ import {
 } from 'src/app/services';
 import { take, first } from 'rxjs/internal/operators';
 
-type HomeDataType = [
+export type HomeDataType = [
   Banner[],
   HotTag[],
   SongSheet[],
