@@ -15,6 +15,7 @@ import { SingerService } from 'src/app/services/home/singer.service';
 import { ActivatedRoute } from '@angular/router';
 import { map } from 'rxjs/internal/operators';
 import { HomeDataType } from '../home-resolve.service';
+import { SheetService } from 'src/app/services/home/sheet.service';
 
 @Component({
   selector: 'app-my-home',
@@ -34,7 +35,8 @@ export class MyHomeComponent implements OnInit {
   constructor(
     private homeService: HomeService,
     private singerService: SingerService,
-    private router: ActivatedRoute
+    private router: ActivatedRoute,
+    private sheetService: SheetService
   ) {}
 
   ngOnInit() {
@@ -62,5 +64,17 @@ export class MyHomeComponent implements OnInit {
 
   onChangeSlide(type: 'pre' | 'next') {
     this.nzCarousel[type]();
+  }
+
+  onPlaySheet(id: number) {
+    console.log('id', id);
+    // this.sheetService
+    //   .getSongSheetDetail(id)
+    //   .subscribe((res) => {
+    //     console.log(res);
+    //   });
+    this.sheetService.playSheet(id).subscribe((res) => {
+      console.log('res:', res);
+    });
   }
 }
