@@ -6,6 +6,8 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./wyy-player.component.less'],
 })
 export class WyyPlayerComponent implements OnInit {
+  sliderValue = 35;
+  bufferOffset = 75;
   constructor() {}
 
   ngOnInit() {}

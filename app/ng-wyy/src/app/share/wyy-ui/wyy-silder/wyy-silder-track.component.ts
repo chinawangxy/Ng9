@@ -11,13 +11,14 @@ import { WySliderStyle } from './wy-silder-types';
 @Component({
   selector: 'app-wyy-silder-track',
   template:
-    '<div class="wy-slider-track" [ngStyle]="style"></div> ',
+    '<div class="wy-slider-track" [class.buffer]="wyBuffer" [ngStyle]="style"></div> ',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WyySilderTrackComponent
   implements OnInit, OnChanges {
   @Input() wyVertical = false;
   @Input() wyLength: number;
+  @Input() wyBuffer: boolean = false;
   style: WySliderStyle = {};
   constructor() {}
 

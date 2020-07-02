@@ -9,6 +9,7 @@ import {
   Inject,
   ChangeDetectorRef,
   OnDestroy,
+  forwardRef,
 } from '@angular/core';
 import {
   fromEvent,
@@ -34,7 +35,10 @@ import {
   getPercent,
 } from './wy-silder-types';
 import { DOCUMENT } from '@angular/common';
-import { ControlValueAccessor } from '@angular/forms';
+import {
+  ControlValueAccessor,
+  NG_VALUE_ACCESSOR,
+} from '@angular/forms';
 
 @Component({
   selector: 'app-wyy-silder',
@@ -42,6 +46,13 @@ import { ControlValueAccessor } from '@angular/forms';
   styleUrls: ['./wyy-silder.component.less'],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => WyySilderComponent),
+      multi: true,
+    },
+  ],
 })
 export class WyySilderComponent
   implements OnInit, OnDestroy, ControlValueAccessor {
@@ -54,6 +65,7 @@ export class WyySilderComponent
 
   @Input() wyMin = 0;
   @Input() wyMax = 100;
+  @Input() bufferOffset: SliderValue = 0;
 
   private isDragging: boolean = false;
   private value: SliderValue = null;
@@ -81,6 +93,7 @@ export class WyySilderComponent
     this.subscribeDrag(['start']);
   }
 
+  // 创建 开始流
   private createDraggingObservables() {
     // 判定 垂直还是水平
     const orientField = this.wyVertical ? 'pageY' : 'pageX';
@@ -147,6 +160,7 @@ export class WyySilderComponent
     });
   }
 
+  // 设定订阅流工具函数
   private subscribeDrag(
     events: string[] = ['start', 'move', 'end']
   ) {
@@ -181,7 +195,7 @@ export class WyySilderComponent
       );
     }
   }
-
+  // 流解绑
   private unsubscribeDrag(
     events: string[] = ['start', 'move', 'end']
   ) {
@@ -204,6 +218,7 @@ export class WyySilderComponent
     }
   }
 
+  // 获取最终值 将 位置 转换为 进度
   private findClosestValue(position: number): number {
     // 获取滑块总长
     const sliderLength = this.getSliderLength();
@@ -223,6 +238,7 @@ export class WyySilderComponent
     );
   }
 
+  // 开始工具函数 设定值
   private onDragStart(value: number) {
     console.log('start:', value);
     // 定义解绑事件
@@ -254,16 +270,37 @@ export class WyySilderComponent
     }
     return dataA === dataB;
   }
-
-  private setValue(value: SliderValue) {
-    if (this.valueEqual(this.value, value)) {
-      return;
+  formatValue(value: SliderValue): SliderValue {
+    let res = value;
+    if (this.assertValueValid(value)) {
+      res = this.wyMin;
+    } else {
+      res = limitNumberInRange(
+        value,
+        this.wyMin,
+        this.wyMax
+      );
     }
+    return res;
+  }
 
-    this.value = value;
-    this.updateTrackAndHandles();
-    // 手动触发检测
-    this.cdr.markForCheck();
+  // 判断是否是NAN
+  private assertValueValid(value: SliderValue): boolean {
+    return isNaN(
+      typeof value !== 'number' ? parseFloat(value) : value
+    );
+  }
+
+  private setValue(value: SliderValue, needCheck = false) {
+    if (needCheck) {
+      if (this.isDragging) return;
+      this.value = this.formatValue(value);
+      this.updateTrackAndHandles();
+    } else if (!this.valueEqual(this.value, value)) {
+      this.value = value;
+      this.updateTrackAndHandles();
+      this.onValueChange(this.value);
+    }
   }
 
   private updateTrackAndHandles() {
@@ -276,6 +313,7 @@ export class WyySilderComponent
     return getPercent(this.wyMin, this.wyMax, value);
   }
 
+  // 切换流  移动订阅两者 否则销毁两者
   private toggleDragMoving(moveable: boolean) {
     this.isDragging = moveable;
     if (moveable) {
@@ -285,29 +323,35 @@ export class WyySilderComponent
     }
   }
 
+  // 获取 dom长度
   private getSliderLength(): number {
     return this.wyVertical
       ? this.sliderDom.clientHeight
       : this.sliderDom.clientWidth;
   }
-
+  // 获取开始位置点
   private getSliderStartPosition(): number {
     const offset = getElementOffset(this.sliderDom);
     return this.wyVertical ? offset.top : offset.left;
   }
 
-  writeValue(obj: any): void {
-    throw new Error('Method not implemented.');
-  }
+  private onValueChange(value: SliderValue): void {}
 
-  registerOnChange(fn: any): void {
-    throw new Error('Method not implemented.');
-  }
+  private onTouched(): void {}
 
-  registerOnTouched(fn: any): void {
-    throw new Error('Method not implemented.');
+  // model 的接口实现
+  writeValue(value: SliderValue): void {
+    this.setValue(value, true);
   }
-
+  // model 的接口实现
+  registerOnChange(fn: (value: SliderValue) => void): void {
+    this.onValueChange = fn;
+  }
+  // model 的接口实现
+  registerOnTouched(fn: () => void): void {
+    this.onTouched = fn;
+  }
+  // 销毁 则解绑
   ngOnDestroy(): void {
     this.unsubscribeDrag();
   }

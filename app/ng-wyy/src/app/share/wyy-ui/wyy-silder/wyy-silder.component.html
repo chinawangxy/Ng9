@@ -1,4 +1,13 @@
-<div class="wy-slider" #wySlider>
+<div
+  class="wy-slider"
+  #wySlider
+  [class.wy-slider-vertical]="wyVertical"
+>
+  <app-wyy-silder-track
+    [wyVertical]="wyVertical"
+    [wyLength]="bufferOffset"
+    [wyBuffer]="true"
+  ></app-wyy-silder-track>
   <app-wyy-silder-track
     [wyVertical]="wyVertical"
     [wyLength]="offset"

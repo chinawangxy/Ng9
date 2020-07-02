@@ -27,7 +27,10 @@
         </div>
         <div class="bar">
           <div class="slider-wrap">
-            <app-wyy-silder></app-wyy-silder>
+            <app-wyy-silder
+              [(ngModel)]="sliderValue"
+              [bufferOffset]="bufferOffset"
+            ></app-wyy-silder>
           </div>
           <span class="time"> <em>02:11</em>/ 04:25 </span>
         </div>
@@ -40,6 +43,11 @@
         <i class="volume" title="音量"></i>
         <i class="loop" title="循环"></i>
         <p class="open"><span></span></p>
+        <div class="control-vol">
+          <app-wyy-silder
+            [wyVertical]="true"
+          ></app-wyy-silder>
+        </div>
       </div>
     </div>
   </div>
