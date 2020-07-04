@@ -14,6 +14,7 @@ import { PagesModule } from '../pages/pages.module';
 import { ShareModule } from '../share/share.module';
 import { registerLocaleData } from '@angular/common';
 import { API_CONFIG } from '.';
+import { AppStoreModule } from '../store';
 
 registerLocaleData(zh);
 
@@ -23,6 +24,7 @@ registerLocaleData(zh);
     BrowserModule,
     HttpClientModule,
     BrowserAnimationsModule,
+    AppStoreModule,
     ServicesModule,
     PagesModule,
     ShareModule,

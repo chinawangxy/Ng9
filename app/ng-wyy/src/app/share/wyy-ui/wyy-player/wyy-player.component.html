@@ -51,4 +51,10 @@
       </div>
     </div>
   </div>
+
+  <audio
+    [src]="currentSong?.url"
+    (canplay)="canPlay()"
+    #audio
+  ></audio>
 </div>

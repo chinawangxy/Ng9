@@ -1,7 +1,18 @@
 import { playMode } from 'src/app/share/wyy-ui/wyy-player/player-type';
 import { Song } from 'src/app/services';
-import { createReducer, on } from '@ngrx/store';
-import { setPlaying } from '../actions/player.actions';
+import { createReducer, on, Action } from '@ngrx/store';
+import {
+  setPlaying,
+  setPlayList,
+  setSongList,
+  setPlayMode,
+  setCurrentIndex,
+} from '../actions/player.actions';
+
+/**
+ * 定义元数据
+ * 定义调度器 注册调度器动作
+ */
 
 export type PlayState = {
   // 播放状态
@@ -16,7 +27,7 @@ export type PlayState = {
   currentIndex: number;
 };
 
-// 初始化 state
+// 初始化 state 数据
 export const initialState: PlayState = {
   playing: false,
   songList: [],
@@ -25,33 +36,35 @@ export const initialState: PlayState = {
   currentIndex: -1,
 };
 
-// 创建 reducer 函数
+// 创建 reducer 函数，定义事件 ==》调度器 逻辑
 const reducer = createReducer(
   initialState,
   on(setPlaying, (state, { playing }) => ({
     ...state,
     playing,
+  })),
+  on(setPlayList, (state, { playList }) => ({
+    ...state,
+    playList,
+  })),
+  on(setSongList, (state, { songList }) => ({
+    ...state,
+    songList,
+  })),
+  on(setPlayMode, (state, { playMode }) => ({
+    ...state,
+    playMode,
+  })),
+  on(setCurrentIndex, (state, { currentIndex }) => ({
+    ...state,
+    currentIndex,
   }))
 );
 
-/* export const setPlaying = createAction(
-  '[player] Set playing',
-  props<{ playing: boolean }>()
-);
-export const setPlayList = createAction(
-  '[player] Set playList',
-  props<{ list: Song[] }>()
-);
-export const setSongList = createAction(
-  '[player] Set songList',
-  props<{ list: Song[] }>()
-);
-export const setPlayMode = createAction(
-  '[player] Set playMode',
-  props<{ mode: playMode }>()
-);
-export const setCurrentIndex = createAction(
-  '[player] Set CurrentIndex',
-  props<{ index: number }>()
-);
- */
+// 调度器入口
+export function playerReducer(
+  state: PlayState,
+  action: Action
+) {
+  return reducer(state, action);
+}

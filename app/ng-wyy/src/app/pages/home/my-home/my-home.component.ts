@@ -16,6 +16,13 @@ import { ActivatedRoute } from '@angular/router';
 import { map } from 'rxjs/internal/operators';
 import { HomeDataType } from '../home-resolve.service';
 import { SheetService } from 'src/app/services/home/sheet.service';
+import { AppStoreModule } from 'src/app/store';
+import { Store } from '@ngrx/store';
+import {
+  setPlayList,
+  setSongList,
+  setCurrentIndex,
+} from 'src/app/store/actions/player.actions';
 
 @Component({
   selector: 'app-my-home',
@@ -36,7 +43,8 @@ export class MyHomeComponent implements OnInit {
     private homeService: HomeService,
     private singerService: SingerService,
     private router: ActivatedRoute,
-    private sheetService: SheetService
+    private sheetService: SheetService,
+    private store$: Store<AppStoreModule>
   ) {}
 
   ngOnInit() {
@@ -68,13 +76,13 @@ export class MyHomeComponent implements OnInit {
 
   onPlaySheet(id: number) {
     console.log('id', id);
-    // this.sheetService
-    //   .getSongSheetDetail(id)
-    //   .subscribe((res) => {
-    //     console.log(res);
-    //   });
-    this.sheetService.playSheet(id).subscribe((res) => {
-      console.log('res:', res);
+    this.sheetService.playSheet(id).subscribe((list) => {
+      // console.log('res:', res);
+      this.store$.dispatch(setSongList({ songList: list }));
+      this.store$.dispatch(setPlayList({ playList: list }));
+      this.store$.dispatch(
+        setCurrentIndex({ currentIndex: 0 })
+      );
     });
   }
 }
