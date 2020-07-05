@@ -5,7 +5,6 @@ import {
   ElementRef,
   AfterViewInit,
 } from '@angular/core';
-import { AppStoreModule } from 'src/app/store';
 import { Store, select } from '@ngrx/store';
 import {
   getSongList,
@@ -14,7 +13,7 @@ import {
   getPlayMode,
   getCurrentSong,
 } from 'src/app/store/selectors/player.selector';
-import { strict } from 'assert';
+import { PlayState } from 'src/app/store/reduces/player.reduce';
 import { Song } from 'src/app/services';
 
 @Component({
@@ -37,8 +36,9 @@ export class WyyPlayerComponent
   currentSong: Song;
   currentIndex: number;
 
-  constructor(private store$: Store<AppStoreModule>) {
-    // const appStore$ = this.store$.pipe(select('player'));
+  constructor(
+    private store$: Store<{ player: PlayState }>
+  ) {
     const appStore$ = this.store$.pipe(select('player'));
 
     const stateArr = [
