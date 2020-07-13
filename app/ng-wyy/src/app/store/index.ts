@@ -1,15 +1,14 @@
 import { NgModule } from '@angular/core';
-import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { StoreModule } from '@ngrx/store';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { environment } from '../../environments/environment';
 import { playerReducer } from './reduces/player.reduce';
-import { environment } from 'src/environments/environment';
 
 @NgModule({
+  declarations: [],
   imports: [
     StoreModule.forRoot(
-      {
-        player: playerReducer,
-      },
+      { player: playerReducer },
       {
         runtimeChecks: {
           strictStateImmutability: true,
@@ -24,6 +23,5 @@ import { environment } from 'src/environments/environment';
       logOnly: environment.production,
     }),
   ],
-  declarations: [],
 })
 export class AppStoreModule {}

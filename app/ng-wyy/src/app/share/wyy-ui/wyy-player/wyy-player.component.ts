@@ -13,8 +13,12 @@ import {
   getPlayMode,
   getCurrentSong,
 } from 'src/app/store/selectors/player.selector';
-import { PlayState } from 'src/app/store/reduces/player.reduce';
 import { Song } from 'src/app/services';
+import { AppStoreModule } from 'src/app/store';
+import {
+  playerReducer,
+  PlayState,
+} from 'src/app/store/reduces/player.reduce';
 
 @Component({
   selector: 'app-wyy-player',
@@ -37,35 +41,31 @@ export class WyyPlayerComponent
   currentIndex: number;
 
   constructor(
-    private store$: Store<{ player: PlayState }>
+    private store$: Store<{ player: PlayState }> // private store$: Store<AppStoreModule>
   ) {
     const appStore$ = this.store$.pipe(select('player'));
-
-    const stateArr = [
-      {
-        type: getSongList,
-        cd: (list) => this.watchList(list, 'songList'),
-      },
-      {
-        type: getPlayList,
-        cd: (list) => this.watchList(list, 'playerList'),
-      },
-      {
-        type: getCurrentIndex,
-        cd: (index) => this.watchCurrentIndex(index),
-      },
-      {
-        type: getPlayMode,
-        cd: (mode) => this.watchPlayMode(mode),
-      },
-      {
-        type: getCurrentSong,
-        cd: (song) => this.watchCurrentSong(song),
-      },
-    ];
-    stateArr.forEach((item) => {
-      appStore$.pipe(select(item.type)).subscribe(item.cd);
-    });
+    appStore$
+      .pipe(select(getSongList))
+      .subscribe((list) =>
+        this.watchList(list, 'songList')
+      );
+    appStore$
+      .pipe(select(getPlayList))
+      .subscribe((list) =>
+        this.watchList(list, 'playList')
+      );
+    appStore$
+      .pipe(select(getCurrentIndex))
+      .subscribe((index) => this.watchCurrentIndex(index));
+    appStore$
+      .pipe(select(getPlayMode))
+      .subscribe((mode) => this.watchPlayMode(mode));
+    appStore$
+      .pipe(select(getCurrentIndex))
+      .subscribe((index) => this.watchCurrentIndex(index));
+    appStore$
+      .pipe(select(getCurrentSong))
+      .subscribe((action) => this.watchCurrentSong(action));
   }
   ngAfterViewInit(): void {
     this.audioEl = this.audio.nativeElement;
@@ -98,5 +98,11 @@ export class WyyPlayerComponent
   private watchCurrentSong(song) {
     console.log('song', song);
     this.currentSong = song;
+  }
+
+  get picUrl(): string {
+    return this.currentSong
+      ? this.currentSong.al.picUrl
+      : 'http://s4.music.126.net/style/web2/img/default/default_album.jpg';
   }
 }

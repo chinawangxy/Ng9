@@ -24,7 +24,7 @@ export const getPlayMode = createSelector(
 
 export const getCurrentIndex = createSelector(
   selectPlayerState,
-  (state: PlayState) => state.playing
+  (state: PlayState) => state.currentIndex
 );
 
 export const getCurrentSong = createSelector(
